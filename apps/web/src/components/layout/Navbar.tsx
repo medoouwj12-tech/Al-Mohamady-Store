@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Search, Globe } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated, user, logout } = useAuthStore();
   const { items } = useCartStore();
+  const { language, setLanguage, t } = useLanguage();
 
   const cartItemCount = items.reduce((acc, item) => acc + item.qty, 0);
 
@@ -53,6 +55,15 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="hidden md:flex items-center gap-5">
+            {/* Language Toggle */}
+            <button
+              onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
+              className="flex items-center gap-1 text-xs text-gray-300 hover:text-luxury-gold transition-colors border border-white/10 rounded-full px-2 py-1"
+              title="Toggle Language"
+            >
+              <Globe size={14} />
+              {language === 'en' ? 'AR' : 'EN'}
+            </button>
             <div className="relative flex items-center">
               <AnimatePresence>
                 {isSearchOpen && (

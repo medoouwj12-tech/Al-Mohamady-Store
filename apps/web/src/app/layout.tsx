@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryProvider from "@/providers/QueryProvider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,11 +22,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-luxury-black text-luxury-text antialiased min-h-screen flex flex-col`}>
         <QueryProvider>
-          <Navbar />
-          <main className="flex-grow pt-24">
-            {children}
-          </main>
-          <Footer />
+          <LanguageProvider>
+            <Navbar />
+            <main className="flex-grow pt-24">
+              {children}
+            </main>
+            <Footer />
+          </LanguageProvider>
         </QueryProvider>
       </body>
     </html>
