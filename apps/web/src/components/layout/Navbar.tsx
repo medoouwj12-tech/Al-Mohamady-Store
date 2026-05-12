@@ -11,6 +11,8 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated, user, logout } = useAuthStore();
   const { items } = useCartStore();
 
@@ -51,9 +53,39 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="hidden md:flex items-center gap-5">
-            <button className="text-gray-300 hover:text-luxury-gold transition-colors">
-              <Search size={20} />
-            </button>
+            <div className="relative flex items-center">
+              <AnimatePresence>
+                {isSearchOpen && (
+                  <motion.form 
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{ width: 200, opacity: 1 }}
+                    exit={{ width: 0, opacity: 0 }}
+                    className="overflow-hidden mr-2"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (searchQuery.trim()) {
+                        window.location.href = `/shop?keyword=${encodeURIComponent(searchQuery)}`;
+                      }
+                    }}
+                  >
+                    <input 
+                      type="text" 
+                      placeholder="Search products..." 
+                      className="w-full bg-white/10 border border-white/20 rounded-full py-1 px-4 text-sm text-white focus:outline-none focus:border-luxury-gold transition-colors"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      autoFocus
+                    />
+                  </motion.form>
+                )}
+              </AnimatePresence>
+              <button 
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="text-gray-300 hover:text-luxury-gold transition-colors"
+              >
+                <Search size={20} />
+              </button>
+            </div>
             <Link href="/cart" className="relative text-gray-300 hover:text-luxury-gold transition-colors">
               <ShoppingCart size={20} />
               <span className="absolute -top-2 -right-2 bg-luxury-gold text-black text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center">
@@ -62,7 +94,7 @@ export default function Navbar() {
             </Link>
             {isAuthenticated ? (
               <div className="flex items-center gap-4">
-                <Link href="/dashboard" className="text-sm font-medium text-gray-300 hover:text-white">
+                <Link href="/admin/dashboard" className="text-sm font-medium text-gray-300 hover:text-white">
                   {user?.name}
                 </Link>
                 <button onClick={logout} className="text-sm font-medium text-red-400 hover:text-red-300">

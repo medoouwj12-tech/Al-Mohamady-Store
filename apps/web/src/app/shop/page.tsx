@@ -15,7 +15,15 @@ export default function ShopPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const response = await api.get('/products');
+      let url = '/products';
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const keyword = urlParams.get('keyword');
+        if (keyword) {
+          url += `?keyword=${encodeURIComponent(keyword)}`;
+        }
+      }
+      const response = await api.get(url);
       return response.data;
     }
   });
