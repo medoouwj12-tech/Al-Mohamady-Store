@@ -28,10 +28,12 @@
 
 @layer utilities {
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    @apply bg-white/5 border border-white/10;
+    backdrop-filter: blur(4px); /* Lighter blur for all devices */
   }
   .glass-card {
-    @apply bg-luxury-gray/50 backdrop-blur-lg border border-luxury-border shadow-2xl;
+    @apply bg-luxury-gray/80 border border-luxury-border shadow-xl;
+    backdrop-filter: blur(8px);
   }
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-luxury-muted;

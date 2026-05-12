@@ -98,9 +98,9 @@ export default function ShopPage() {
             {filteredProducts.map((product: any, index: number) => (
               <motion.div
                 key={product._id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
                 className="group cursor-pointer"
               >
                 <div className="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-luxury-gray">
