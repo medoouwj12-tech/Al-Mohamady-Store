@@ -12,7 +12,7 @@ const startServer = async () => {
     await mongoose.connect(MONGO_URI);
     console.log(`[MongoDB] Connected to database: ${MONGO_URI}`);
 
-    app.listen(PORT, () => {
+    app.listen(PORT as number, '0.0.0.0', () => {
       console.log(`[Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
     });
   } catch (error) {
