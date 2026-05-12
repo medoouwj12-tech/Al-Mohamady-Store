@@ -94,7 +94,7 @@ export default function Navbar() {
             </Link>
             {isAuthenticated ? (
               <div className="flex items-center gap-4">
-                <Link href="/admin/dashboard" className="text-sm font-medium text-gray-300 hover:text-white">
+                <Link href="/admin" className="text-sm font-medium text-gray-300 hover:text-white">
                   {user?.name}
                 </Link>
                 <button onClick={logout} className="text-sm font-medium text-red-400 hover:text-red-300">

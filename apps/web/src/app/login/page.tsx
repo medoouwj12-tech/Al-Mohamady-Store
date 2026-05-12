@@ -24,7 +24,7 @@ export default function LoginPage() {
       const { data } = await api.post('/auth/login', { email, password });
       setCredentials(data.user, data.token);
       if (data.user.role === 'admin') {
-        router.push('/admin/dashboard');
+        router.push('/admin');
       } else {
         router.push('/');
       }
