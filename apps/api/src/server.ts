@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT || '5000', 10);
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/al-mohamady';
 
 const startServer = async () => {
@@ -12,7 +12,7 @@ const startServer = async () => {
     await mongoose.connect(MONGO_URI);
     console.log(`[MongoDB] Connected to database: ${MONGO_URI}`);
 
-    app.listen(PORT as number, '0.0.0.0', () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`[Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
     });
   } catch (error) {
