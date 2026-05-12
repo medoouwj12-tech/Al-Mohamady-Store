@@ -120,12 +120,32 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const stored = localStorage.getItem('lang') as Language;
     if (stored === 'ar' || stored === 'en') {
       setLanguageState(stored);
+      applyLang(stored);
     }
   }, []);
+
+  const applyLang = (lang: Language) => {
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+    if (lang === 'ar') {
+      // Load Cairo font for Arabic
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap';
+      link.id = 'cairo-font';
+      if (!document.getElementById('cairo-font')) {
+        document.head.appendChild(link);
+      }
+      document.body.style.fontFamily = "'Cairo', sans-serif";
+    } else {
+      document.body.style.fontFamily = '';
+    }
+  };
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('lang', lang);
+    applyLang(lang);
   };
 
   const t = (key: keyof typeof translations.en): string => {
@@ -136,14 +156,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t, isRTL }}>
-      <div dir={isRTL ? 'rtl' : 'ltr'} style={{ fontFamily: isRTL ? "'Cairo', sans-serif" : undefined }}>
-        {isRTL && (
-          <style>{`@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');`}</style>
-        )}
-        {children}
-      </div>
+      {children}
     </LanguageContext.Provider>
   );
 }
 
 export const useLanguage = () => useContext(LanguageContext);
+

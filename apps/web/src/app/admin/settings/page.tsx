@@ -1,11 +1,30 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Store, Globe, Shield, Bell, Palette } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Store, Globe, Shield, Bell, Palette, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function AdminSettingsPage() {
   const { language, setLanguage, t } = useLanguage();
+  const [saved, setSaved] = useState(false);
+  const [storeName, setStoreName] = useState('Al-Mohamady Commerce');
+  const [storeEmail, setStoreEmail] = useState('admin@almohamady.com');
+  const [currency, setCurrency] = useState('USD');
+  const [notifications, setNotifications] = useState({
+    newOrder: true,
+    lowStock: true,
+    newUser: false,
+  });
+
+  const handleSave = () => {
+    // Save settings to localStorage
+    localStorage.setItem('storeSettings', JSON.stringify({
+      storeName, storeEmail, currency, language, notifications
+    }));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
 
   return (
     <div>
@@ -109,8 +128,21 @@ export default function AdminSettingsPage() {
           </div>
         </motion.div>
 
-        <div className="flex justify-end">
-          <button className="bg-luxury-gold text-black px-8 py-3 rounded-xl font-bold hover:bg-yellow-500 transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+        <div className="flex items-center justify-end gap-4">
+          {saved && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center gap-2 text-green-400 bg-green-500/10 border border-green-500/30 px-4 py-2 rounded-xl text-sm font-bold"
+            >
+              <CheckCircle size={16} /> Settings saved successfully!
+            </motion.div>
+          )}
+          <button
+            onClick={handleSave}
+            className="bg-luxury-gold text-black px-8 py-3 rounded-xl font-bold hover:bg-yellow-500 transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]"
+          >
             Save Settings
           </button>
         </div>
