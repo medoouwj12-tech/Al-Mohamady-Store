@@ -37,12 +37,12 @@ const reviewSchema: Schema = new Schema(
 const productSchema: Schema = new Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-    category: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Category' },
-    name: { type: String, required: true, trim: true },
-    description: { type: String, required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Category', default: null },
+    name: { type: String, required: true, trim: true, default: 'New Product' },
+    description: { type: String, required: false, default: '' },
     price: { type: Number, required: true, default: 0 },
-    images: [{ type: String, required: true }],
-    brand: { type: String, required: true },
+    images: [{ type: String }],
+    brand: { type: String, required: false, default: '' },
     stock: { type: Number, required: true, default: 0 },
     ratings: { type: Number, required: true, default: 0 },
     numReviews: { type: Number, required: true, default: 0 },
