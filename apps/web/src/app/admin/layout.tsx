@@ -1,12 +1,26 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, ShoppingBag, Users, Settings, LogOut, PackageSearch } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuthStore } from '@/store/authStore';
+import { useEffect } from 'react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuthStore();
+
+  useEffect(() => {
+    if (!isAuthenticated || user?.role !== 'admin') {
+      router.replace('/login');
+    }
+  }, [isAuthenticated, user, router]);
+
+  if (!isAuthenticated || user?.role !== 'admin') {
+    return null;
+  }
 
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },

@@ -21,12 +21,15 @@ export default function AdminProductsPage() {
 
   const createMutation = useMutation({
     mutationFn: async () => {
-      const response = await api.post('/products', {});
+      const response = await api.post('/products', { category: null });
       return response.data.product;
     },
     onSuccess: (product) => {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       router.push(`/admin/products/edit/${product._id}`);
+    },
+    onError: (error: any) => {
+      alert(`Failed to create product: ${error.response?.data?.message || error.message}. Make sure you are logged in as admin.`);
     }
   });
 
@@ -40,6 +43,9 @@ export default function AdminProductsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
+    },
+    onError: (error: any) => {
+      alert(`Failed to delete: ${error.response?.data?.message || error.message}`);
     }
   });
 
