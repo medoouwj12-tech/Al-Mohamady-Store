@@ -2,16 +2,37 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowRight, Lock, Mail } from 'lucide-react';
+import { ArrowRight, Lock, Mail, Loader2 } from 'lucide-react';
+import api from '@/lib/axios';
+import { useAuthStore } from '@/store/authStore';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { setCredentials } = useAuthStore();
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Login Logic
+    setError('');
+    setIsLoading(true);
+    try {
+      const { data } = await api.post('/auth/login', { email, password });
+      setCredentials(data.user, data.token);
+      if (data.user.role === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Invalid email or password');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -66,11 +87,19 @@ export default function LoginPage() {
                 </div>
               </div>
 
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3">
+                  {error}
+                </div>
+              )}
+
               <button 
                 type="submit"
-                className="w-full bg-luxury-gold text-black py-4 rounded-xl font-bold text-lg hover:bg-yellow-500 transition-colors flex items-center justify-center gap-2 mt-4 shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+                disabled={isLoading}
+                className="w-full bg-luxury-gold text-black py-4 rounded-xl font-bold text-lg hover:bg-yellow-500 transition-colors flex items-center justify-center gap-2 mt-4 shadow-[0_0_20px_rgba(212,175,55,0.2)] disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Sign In <ArrowRight size={20} />
+                {isLoading ? <Loader2 size={20} className="animate-spin" /> : <></>}
+                {isLoading ? 'Signing In...' : 'Sign In'} {!isLoading && <ArrowRight size={20} />}
               </button>
             </form>
 
